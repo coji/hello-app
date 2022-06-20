@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   Container,
   Heading,
@@ -13,7 +13,8 @@ import { invoke } from '@tauri-apps/api'
 function App() {
   const inputEl = useRef<HTMLInputElement>(null!)
 
-  const handleClickInvoke = async () => {
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     await invoke('say', { message: inputEl.current.value })
   }
 
@@ -21,18 +22,20 @@ function App() {
     <Container maxW="container.lg">
       <Heading>Hello!</Heading>
 
-      <Stack>
-        <Box>
-          <FormLabel htmlFor="message">メッセージ</FormLabel>
-          <Input id="message" ref={inputEl}></Input>
-        </Box>
+      <form onSubmit={handleFormSubmit}>
+        <Stack>
+          <Box>
+            <FormLabel htmlFor="message">メッセージ</FormLabel>
+            <Input id="message" autoFocus ref={inputEl}></Input>
+          </Box>
 
-        <Stack direction="row">
-          <Button onClick={() => handleClickInvoke()} colorScheme="green">
-            Greeting
-          </Button>
+          <Stack direction="row">
+            <Button type="submit" colorScheme="green">
+              Greeting
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
+      </form>
     </Container>
   )
 }
